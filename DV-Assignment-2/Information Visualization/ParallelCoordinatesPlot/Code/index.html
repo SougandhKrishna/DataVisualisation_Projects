@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-16">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Parallel Coordinates Plot</title>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+    </head>
+
+    <body>
+        <div id="parallel-coordinates-plot"></div>
+        <script>
+            function unpack(rows, key) {
+                return rows.map(function(row) {
+                  return row[key];
+                });
+            }
+
+            Plotly.d3.csv('./UpdatedData.csv', function(error, csvData) {
+                if (error) throw error;
+        
+                var dimensions = Object.keys(csvData[0]);
+                
+                console.log(unpack(csvData, 'category'))
+
+                var trace = {
+                    type: 'parcoords',
+                    line: {
+                        color: unpack(csvData, 'Country'),
+                        showscale: true,
+                        colorscale: 'Viridis',
+                    },
+                    dimensions: [{
+                        label: "Subscribers",
+                        values: unpack(csvData, "Subscribers")
+                    }, {
+                        label: "Video Views",
+                        values: unpack(csvData, "Video Views")
+                    }, {
+                        label: "Uploads",
+                        values: unpack(csvData, "Uploads")
+                    }, {
+                        label: "Channel Age (Days)",
+                        values: unpack(csvData, "Days Since Created")
+                    }, {
+                        label: "Category",
+                        values: unpack(csvData, "category")
+                    }, {
+                        label: "Country",
+                        values: unpack(csvData, "Country")
+                    }]
+                };
+
+        
+                var layout = {
+                    title: 'Global YouTube Statistics Parallel Coordinates Plot',
+                };
+        
+                Plotly.newPlot('parallel-coordinates-plot', [trace], layout);
+            });
+        </script>
+        <p>
+            <div style="float:left;width:25%;height:75%">
+                Category ID Mappings:
+                <li style="list-style-type:None">
+                    <ul>1 - Comedy</ul>
+                    <ul>2 - Education</ul>
+                    <ul>3 - Entertainment</ul>
+                    <ul>4 - Film & Animation</ul>
+                    <ul>5 - Gaming</ul>
+                    <ul>6 - Howto & Style</ul>
+                    <ul>7 - Music</ul>
+                    <ul>8 - People & Blogs</ul>
+                    <ul>9 - Shows</ul>
+                    <ul>10 - Sports</ul>
+                </li>
+            </div>
+            <div style="float:left;width:25%;height:75%">
+                Country ID Mappings:
+                <li style="list-style-type:None">
+                    <ul>1 - Brazil</ul>
+                    <ul>2 - India</ul>
+                    <ul>3 - Indonesia</ul>
+                    <ul>4 - Mexico</ul>
+                    <ul>5 - Spain</ul>
+                    <ul>6 - United Kingdom</ul>
+                    <ul>7 - United States</ul>
+                </li>
+            </div>
+        </p>
+    </body>
+
+</html>
